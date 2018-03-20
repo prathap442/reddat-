@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <img src="http://scp-wiki.wdfiles.com/local--files/church-of-the-broken-god-hub/SPChu.png" style="width:30px;height:30px" alt="SPChu.png" class="image">   
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="btn btn-primary" href="#">Home</a>
+      </li>
+      <%if(user_signed_in?)%>
+        <!--if the user is signed in then the acc settings,logout-->
+        <li class="nav-item active">
+          <a class="nav-link" href="/users/sign_out"><%=link_to "signout",destroy_user_session_path,method: :delete%></a>
+        </li>
+        <li class="nav-item active">
+          <a class="btn btn-primary" href="/users/edit">Accountsettings</a>
+        </li>
+        <li class="nav-item active">
+          <a class="btn btn-primary" href="/links">Links</a>
+        </li>
+        <li class="nav-item active">
+          <a class="btn btn-default" href="#">Welcome!<%=current_user.email%></a>
+        </li>  
+      <%else%>
+        <li class="nav-item active">
+          <a class="btn btn-primary" href="/users/sign_in">Sign in</a>
+          <a class="btn btn-primary" href="/users/sign_up">new Register</a>
+        </li>     
+      <%end%>
+    </ul>
+  </div>
+</nav>
+
+
+<!--trails-->
+<!-- this is for drop down -->
+<!-- <div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Drop down
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div> -->
