@@ -1,4 +1,5 @@
 class LinksController < ApplicationController
+  before_action :authenticate_user!,except:[:index]
   before_action :set_link, only: [:show, :edit, :update, :destroy]
 
   # GET /links
@@ -10,21 +11,24 @@ class LinksController < ApplicationController
   # GET /links/1
   # GET /links/1.json
   def show
+    @link = Link.find(params[:id])
+    @comment= Comment.new({link_id: @link.id})
   end
 
   # GET /links/new
   def new
-    @link = Link.new
+    @link = current_user.links.build()
   end
 
   # GET /links/1/edit
   def edit
+    @link = Link.find(params[:id])
   end
 
   # POST /links
   # POST /links.json
   def create
-    @link = Link.new(link_params)
+    @link = current_user.links.build(link_params)
 
     respond_to do |format|
       if @link.save
@@ -61,6 +65,17 @@ class LinksController < ApplicationController
     end
   end
 
+  def upvote
+    @link = Link.find(params[:id])
+    @link.upvote_by current_user
+    redirect_to links_path
+  end
+
+  def downvote
+    @link = Link.find(params[:id])
+    @link.downvote_from current_user
+    redirect_to links_path
+  end    
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_link

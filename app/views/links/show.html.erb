@@ -9,6 +9,49 @@
   <strong>URL:</strong>
   <%= @link.url %>
 </p>
+<%if(current_user.id === @link.user.id)%>
+	<%= link_to 'Edit', edit_link_path(@link) %> |
+	<%= link_to 'Back', links_path %>
+<%end%>
+Comments are: <%if(@link.comments.size>0)%>
+               <ol>
+	               <%@link.comments.each do |comment|%>
+	                 <li><%=comment.peer_comment%>------<%=comment.user.email%>
+	                 <%if(current_user.id === comment.user.id)%>
+	                      <%= link_to '--->Edit', edit_comment_path(comment) %>
+	                 <%end%>
+	                 </li>    
+	               <%end%>
+               </ol>
+             <%else%>
+                 <li>There are no comments added and be the first to add</li>
+             <%end%>
 
-<%= link_to 'Edit', edit_link_path(@link) %> |
-<%= link_to 'Back', links_path %>
+
+<!-- thsi is for the form -->
+<%if !(@link.comments.pluck(:user_id).include?(current_user.id))%>
+Add a Comment
+<%= form_for(@comment) do |form| %>
+  <% if @comment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(comment.errors.count, "error") %> prohibited this comment from being saved:</h2>
+
+      <ul>
+      <% @comment.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :peer_comment %>
+    <%= form.text_field :peer_comment, id: :comment_peer_comment %>
+  </div>
+  <%= form.hidden_field :link_id,value: current_user.id%>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+<%else%>
+<%end%>

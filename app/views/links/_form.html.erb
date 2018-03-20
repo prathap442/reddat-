@@ -1,4 +1,4 @@
-<%= form_with(model: link, local: true) do |form| %>
+<%= form_with(model: link, local: true, id: "new_link_form") do |form| %>
   <% if link.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(link.errors.count, "error") %> prohibited this link from being saved:</h2>
@@ -10,18 +10,85 @@
       </ul>
     </div>
   <% end %>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">    
+          <div class="form-group">
+            <%= form.label :title %>
+            <%= form.text_field :title, id: :link_title,class: "form-control" %>
+            <span id="titleError"></span>
+          </div>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title, id: :link_title %>
-  </div>
+          <div class="form-group">
+            <%= form.label :url %>
+            <%= form.text_field :url, id: :link_url,class: "form-control" %>
+            <span id="urlError"></span>
+          </div>
 
-  <div class="field">
-    <%= form.label :url %>
-    <%= form.text_field :url, id: :link_url %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
+          <div class="form-group">
+             <button type="submit" class="btn btn-primary" id="submit_details">Submit</button>
+          </div>
+          <%= link_to 'Back', links_path %>
+      </div>
+    </div>
   </div>
 <% end %>
+<script>
+  var titleHandle = document.getElementById("link_title");
+  var urlRegex = (/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+  var urlHandle = document.getElementById('link_url');
+  var titleErrorHandle = document.getElementById('titleError');
+  var urlErrorHandle = document.getElementById('urlError');
+  var validator={
+    urlValid: false,
+    titleValid: false
+  }
+  var formHandle = document.getElementById('new_link_form');
+  var submitHandle = document.getElementById('submit_details');
+
+
+  titleHandle.addEventListener('blur',function(){
+       if(titleHandle.value === ""){
+           titleErrorHandle.innerHTML="the title can't be blank";
+           $('#link_title').addClass('form-control is-invalid')
+           validator.titleValid = false;
+       }
+       else{
+          titleErrorHandle.innerHTML = "✓";
+           $('#link_title').removeClass('form-control is-invalid');
+           $('#link_title').addClass('form-control is-valid');
+          validator.titleValid = true;
+       }
+  },false)
+  
+  urlHandle.addEventListener('blur',function(){
+     if(urlHandle.value === ""){
+        urlErrorHandle.innerHTML = "this cant be left bland";
+        $('#link_url').addClass('form-control is-invalid');
+        validator.urlValid = false;
+     }
+     else{
+        if(urlRegex.test(urlHandle.value)=== true){
+           urlErrorHandle.innerHTML = "this is a valid url";
+           $('#link_url').removeClass('form-control is-invalid')
+           $('#link_url').addClass('form-control is-valid')
+           validator.urlValid = true;
+        }
+        else{
+           urlErrorHandle.innerHTML = "this is  a invalid url";
+           $('#link_url').addClass('form-control is-invalid')
+           validator.urlValid = false;
+        }
+     }
+  },false)
+  
+  formHandle.addEventListener('submit',function(e){
+    if(Object.values(validator).includes(false)){
+      e.preventDefault();
+      setTimeout(function(){
+         submitHandle.disabled = false;
+      },100)
+    }
+  },false) 
+  
+</script>  
